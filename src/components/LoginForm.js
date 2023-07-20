@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -6,27 +6,29 @@ import Modal from "./Modal";
 import SignupForm from "./SignupForm";
 import { useFirebase } from "../context/Firebase";
 import { toast } from "react-toastify";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
-  // email: yup.string().email("Invalid email").required("Email is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().min(6).required("Password is required"),
-  emailOrPhone: yup
-    .string()
-    .required("Email or phone number is required")
-    .test(
-      "validEmailOrPhone",
-      "Please enter a valid email or phone number",
-      (value) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^\d+$/;
-        return emailRegex.test(value) || phoneRegex.test(value);
-      }
-    ),
+  // emailOrPhone: yup
+  //   .string()
+  //   .required("Email or phone number is required")
+  //   .test(
+  //     "validEmailOrPhone",
+  //     "Please enter a valid email or phone number",
+  //     (value) => {
+  //       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //       const phoneRegex = /^\d+$/;
+  //       return emailRegex.test(value) || phoneRegex.test(value);
+  //     }
+  //   ),
 });
 
 const LoginForm = () => {
   const [showModal, setShowModal] = useState(false);
 
+  const navigate = useNavigate();
   const Firebase = useFirebase();
 
   const {
@@ -40,16 +42,15 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     // Perform login logic here
     console.log(data);
-
-    await Firebase.loginUser(data.email, data.passwrod)
-      .then((value) => toast.success("User Login successfully"))
+    await Firebase.loginUser(data.email, data.password)
+      .then((value) => toast.success("User login Successfully"))
       .catch((error) => {
         if (error.code === "auth/wrong-password") {
-          toast.error("wrong password.");
-          return;
-        } else if (error.code === "auth/user-not-fount") {
-          toast.error("User not found");
-          return;
+          toast.error("Wrong password.");
+        } else if (error.code === "auth/user-not-found") {
+          toast.error("User not exist try another ");
+        } else {
+          toast.error("error occure during login.");
         }
       });
   };
@@ -64,11 +65,12 @@ const LoginForm = () => {
         >
           <div>
             <input
-              type="text"
+              type="email"
               name="email"
               className="mt-1 px-4 py-3.5 text-[17px] border border-gray-300 rounded-md w-[364px] focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               // ref={register}
-              {...register("emailOrPhone")}
+              // {...register("emailOrPhone")}
+              {...register("email")}
               placeholder="Email address or phone number"
             />
             {errors.emailOrPhone && (
@@ -127,7 +129,7 @@ const LoginForm = () => {
         ;
       </div>
       <Modal showModal={showModal} setShowModal={setShowModal}>
-        <SignupForm />
+        <SignupForm setShowModal={setShowModal} />
       </Modal>
     </>
   );

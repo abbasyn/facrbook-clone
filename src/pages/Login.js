@@ -1,7 +1,17 @@
 import React from "react";
 import LoginForm from "../components/LoginForm";
+import { useNavigate } from "react-router-dom";
+import { useFirebase } from "../context/Firebase";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const firebase = useFirebase();
+
+  if (firebase.isLoggedIn) {
+    console.log("Hello, Mr User is Logged in");
+    navigate("/");
+  }
+
   return (
     <>
       <div className="bg-[#f0f2f5] shadow-xl">

@@ -9,9 +9,7 @@ const schema = yup
   .object({
     // firstName: yup.string().required(),
 
-    email: yup.string().email().required(),
-    //firstName: yup.string().required("Enter your name. "),
-    //surname: yup.string().required("Must be required"),
+    email: yup.string().email().required("In valid email address"),
     password: yup.string().min(4).max(32).required(),
     // emailOrPhone: yup
     //   .string()
@@ -25,14 +23,10 @@ const schema = yup
     //       return emailRegex.test(value) || phoneRegex.test(value);
     //     }
     //   ),
-    // day: yup.string().required("Please select a day"),
-    // month: yup.string().required("Please select a month"),
-    // year: yup.string().required("Please select a year"),
-    // gender: yup.string().required("Please select a gender"),
   })
   .required();
 
-const SignupForm = ({ setShowModal }) => {
+const SignupForm = () => {
   const {
     register,
     handleSubmit,
@@ -46,15 +40,6 @@ const SignupForm = ({ setShowModal }) => {
   const onSubmit = async (data) => {
     console.log(data);
     await Firebase.createUser(data.email, data.password)
-      // .enterUser
-      // data.firstName,
-      // data.surname,
-      // data.emailOrPhone,
-      // data.password,
-      // data.day,
-      // data.month,
-      // data.year,
-      // data.gender
       .then((value) => toast.success("user created successfully"))
       .catch((error) => {
         console.log(error);
@@ -63,7 +48,6 @@ const SignupForm = ({ setShowModal }) => {
           return;
         }
       });
-    setShowModal(false);
   };
 
   return (
@@ -72,9 +56,9 @@ const SignupForm = ({ setShowModal }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-3"
       >
-        <div className="flex gap-2">
-          {/* <div>
-            <input
+        {/* <div className="flex gap-2"> */}
+        {/* <div> */}
+        {/* <input
               type="text"
               name="firstName"
               className="p-2 border rounded  border-[#CCD0D5] focus:first-line:none outline-none"
@@ -87,7 +71,7 @@ const SignupForm = ({ setShowModal }) => {
               </p>
             )}
           </div> */}
-          {/* <div>
+        {/* <div>
             <input
               type="text"
               name="surname"
@@ -95,44 +79,36 @@ const SignupForm = ({ setShowModal }) => {
               placeholder="Surname"
               {...register("surname")}
             />
-            {errors.surname && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.surname.message}
-              </p>
-            )}
           </div> */}
-        </div>
+        {/* </div> */}
         <div className="w-full border border-[#CCD0D5] focus:none rounded ">
           <input
             type="text"
             name="email"
-            className={`p-2 w-full border rounded focus:first-line:none outline-none ${
-              errors.email && "border border-red-600 outline-none"
-            }`}
+            className="p-2 w-full border rounded   focus:first-line:none outline-none"
             placeholder="Mobile number or email address"
             //{...register("emailOrPhone")}
             {...register("email")}
           />
-          {/* {errors.email && (
+          {errors.email && (
             <p style={{ color: "red" }}>{errors.email.message}</p>
-          )} */}
+          )}
         </div>
 
         <div className="w-full border border-[#CCD0D5] rounded ">
           <input
             type="password"
             name="password"
-            className={`p-2 w-full border rounded focus:first-line:none outline-none ${
-              errors.email && "border border-red-600 outline-none"
-            }`}
+            className="p-2 w-full border rounded focus:first-line:none outline-none"
             placeholder="Password"
             {...register("password")}
           />
-          {/* {errors.password && (
+          {errors.password && (
             <p style={{ color: "red" }}>{errors.password.message}</p>
-          )} */}
+          )}
         </div>
-        {/* 
+
+        {/*
         <div className="flex flex-col gap-3 w-full">
           {/* Day dropdown */}
         {/* <label>Date of birth</label> */}
@@ -144,7 +120,7 @@ const SignupForm = ({ setShowModal }) => {
         {/* <option key={i + 1} value={i + 1}> */}
         {/* {i + 1} */}
         {/* </option> */}
-        {/* // ))} */}
+        {/* ))} */}
         {/* </select> */}
         {/* Month dropdown */}
         {/* <select {...register("month")} className="p-2 px-4 border"> */}
@@ -163,35 +139,33 @@ const SignupForm = ({ setShowModal }) => {
         {/* <option value="">Year</option> */}
         {/* Render options for the last 100 years */}
         {/* {Array.from({ length: 100 }, (_, i) => ( */}
-        {/* // <option key={i + 1920} value={i + 1920}> */}
+        {/* <option key={i + 1920} value={i + 1920}> */}
         {/* {i + 1920} */}
         {/* </option> */}
         {/* ))} */}
         {/* </select> */}
         {/* </div> */}
-        {/* {errors.day && <p className="text-red-500">{errors.day.message}</p>} */}
-        {/* {errors.month && ( */}
-        {/* // <p className="text-red-500">{errors.month.message}</p> */}
-        {/* )} */}
-        {/* {errors.year && <p className="text-red-500">{errors.year.message}</p>} */}
 
         {/* <label>Gender</label> */}
         {/* <div className="flex gap-2"> */}
         {/* Female radio button */}
         {/* <input type="radio" value="Female" {...register("gender")} /> */}
         {/* <label>Female</label> */}
+
         {/* Male radio button */}
         {/* <input type="radio" value="Male" {...register("gender")} /> */}
         {/* <label>Male</label> */}
+
         {/* Custom radio button */}
         {/* <input type="radio" value="Custom" {...register("gender")} /> */}
         {/* <label>Custom</label> */}
         {/* </div> */}
-        {/* </div>  */}
+        {/* </div> */}
 
         <button
           className="p-2 cursor-pointer font-bold bg-[#00A400] rounded w-48 text-white"
           type="submit"
+          value=""
         >
           Sign Up
         </button>
